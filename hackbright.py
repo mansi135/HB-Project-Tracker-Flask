@@ -59,6 +59,30 @@ def make_new_student(first_name, last_name, github):
         first=first_name, last=last_name)
 
 
+def make_new_project(title, description, max_grade):
+    """Add a new project and print confirmation.
+
+    Given a title, description and max grade, add project to the
+    database and print a confirmation message.
+    """
+
+    QUERY = """
+        INSERT INTO projects (title, description, max_grade)
+          VALUES (:title, :description, :max_grade)
+        """
+
+    db.session.execute(QUERY, {'title': title,
+                               'description': description,
+                               'max_grade': max_grade})
+    db.session.commit()
+
+    print """Successfully added project:
+                Title: {}
+                Description: {}
+                Max grade: {}""".format(title, description, max_grade)
+
+
+
 def get_project_by_title(title):
     """Given a project title, print information about the project."""
 
@@ -93,8 +117,8 @@ def get_grade_by_github_title(github, title):
 
     row = db_cursor.fetchone()
 
-    print "Student {acct} in project {title} received grade of {grade}".format(
-        acct=github, title=title, grade=row[0])
+    # print "Student {acct} in project {title} received grade of {grade}".format(
+    #     acct=github, title=title, grade=row[0])
 
     return row
 
@@ -115,6 +139,28 @@ def assign_grade(github, title, grade):
 
     print "Successfully assigned grade of {grade} for {acct} in {title}".format(
         grade=grade, acct=github, title=title)
+
+
+
+
+def update_grade(github, title, grade):
+    """Assign a student a grade on an assignment and print a confirmation."""
+
+    QUERY = """
+        UPDATE grades
+        SET grade = :grade
+        WHERE student_github = :github AND project_title = :title
+        """
+
+    db.session.execute(QUERY, {'github': github,
+                                           'title': title,
+                                           'grade': grade})
+
+    db.session.commit()
+
+    print "Successfully updated grade of {grade} for {acct} in {title}".format(
+        grade=grade, acct=github, title=title)
+
 
 
 def get_grades_by_github(github):
@@ -183,7 +229,7 @@ def get_all_projects():
 
     rows = db_cursor.fetchall()
 
-    return rows
+    return [row[0] for row in rows]
 
 
 def handle_input():

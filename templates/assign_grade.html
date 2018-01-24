@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %} Project-Add {% endblock %}
+
+{% block content %}
+  <form action="/assign-grade" method='POST'>
+   
+   SELECT A STUDENT : 
+    <select name='github'>
+        {% for first_name, last_name, github in all_students %}
+            <option value="{{ github }}">{{ first_name }} {{ last_name }} </option>
+        {% endfor %}
+    </select>
+
+    <br> 
+
+    SELECT A PROJECT : 
+    <select name='title'>
+        {% for project in all_projects %}
+            <option value="{{ project }}">{{ project }}</option>
+        {% endfor %}
+    </select>
+
+    <br>
+
+    Enter the grade:<input type="text" name='grade'>
+
+    <input type="submit">
+
+  </form>
+{% endblock %}

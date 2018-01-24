@@ -1,6 +1,6 @@
 """A web application for tracking projects, students, and student grades."""
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 
 import hackbright
 
@@ -18,6 +18,13 @@ def show_homepage():
     return render_template("homepage.html", students=students, projects=projects)
 
 
+@app.route("/student-search")
+def get_student_form():
+    """Show form for searching for a student."""
+
+    return render_template("student_search.html")
+
+
 @app.route("/student")
 def get_student():
     """Show information about a student."""
@@ -30,13 +37,6 @@ def get_student():
 
     return render_template("student_info.html", github=github,
                            first=first, last=last, results=results)
-
-
-@app.route("/student-search")
-def get_student_form():
-    """Show form for searching for a student."""
-
-    return render_template("student_search.html")
 
 
 @app.route("/student-add")
@@ -81,7 +81,56 @@ def show_project_listing():
                             description=description, max_grade=max_grade, results=results)
 
 
+@app.route("/project-add", methods=['GET'])
+def project_add():
+    """Display form to add project."""
 
+    return render_template("project_add.html")
+
+
+@app.route("/project-add", methods=['POST'])
+def new_project():
+    """Add project to database"""
+
+    title = request.form.get('title')
+    description = request.form.get('description')
+    max_grade = request.form.get('max_grade')
+
+    hackbright.make_new_project(title, description, max_grade)
+
+    return render_template("new_project.html", title=title,
+        description=description, max_grade=max_grade)
+
+
+@app.route("/assign-grade", methods=['GET'])
+def assign_grade():
+    """Assigns a grade to student"""
+
+    all_students = hackbright.get_all_students()
+    
+    all_projects = hackbright.get_all_projects()
+
+    return render_template("assign_grade.html", all_students=all_students, all_projects=all_projects)
+
+
+@app.route("/assign-grade", methods=['POST'])
+def update_grade():
+    """Adds a grade for student"""
+
+    github = request.form.get("github")
+
+    title = request.form.get("title")
+
+    grade = request.form.get("grade")
+
+    if hackbright.get_grade_by_github_title(github, title):
+        hackbright.update_grade(github, title, grade)
+    else:
+        hackbright.assign_grade(github, title, grade)
+
+    url = '/student?github={}'.format(github)
+
+    return redirect(url)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %} New Project Info {% endblock %}
+
+{% block content %}
+  <h1>Project successfully added!</h1>
+  
+  <p>Project name: {{ title }} </p>
+
+  <p>Project description: {{ description }}</p>
+
+  <p>Max grade: {{ max_grade }}</p>
+
+  <a href='/project?title={{ title }}'>Click here</a> to view info about your project.
+
+{% endblock %}
