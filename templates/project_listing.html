@@ -8,4 +8,13 @@
   <strong>Description: </strong>{{ description }}<br>
   <strong>Max grade: </strong>{{ max_grade }}
 
+  <ul>
+  {% for github, grade in results %}
+    <li> <strong>Github Name:</strong> <a href='/student?github={{ github }}'>{{ github }}</a>
+         <strong>Grade Obtained:</strong> {{ grade }} 
+    </li>
+  {% endfor %}
+  </ul>
+
+
 {% endblock %}

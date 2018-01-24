@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %} Homepage {% endblock %}
+
+{% block content %}
+  <h1>Students</h1>
+  <ul>
+    {% for first_name, last_name, github in students %}
+      <li> 
+        <a href='/student?github={{ github }}'>{{ first_name }} {{ last_name }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <h1>Projects</h1>
+  <ul>
+    {% for title in projects %}
+      <li> 
+        <a href='/project?title={{ title[0] }}'>{{ title[0] }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+{% endblock %}

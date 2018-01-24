@@ -157,6 +157,35 @@ def get_grades_by_title(title):
     return rows
 
 
+def get_all_students():
+    """Get first, last, and github for all students"""
+
+    QUERY = """
+            SELECT first_name, last_name, github
+            FROM Students
+            """
+    db_cursor = db.session.execute(QUERY)
+
+    rows = db_cursor.fetchall()
+
+    return rows
+
+
+def get_all_projects():
+    """GET all projects"""
+
+    QUERY = """
+            SELECT title
+            FROM projects
+            """
+
+    db_cursor = db.session.execute(QUERY)
+
+    rows = db_cursor.fetchall()
+
+    return rows
+
+
 def handle_input():
     """Main loop.
 
@@ -198,6 +227,7 @@ def handle_input():
         elif command == "project_grades":
             title = args[0]
             get_grades_by_title(title)
+
 
 
 if __name__ == "__main__":
